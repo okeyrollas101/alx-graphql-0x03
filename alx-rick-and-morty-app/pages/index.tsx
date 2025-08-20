@@ -3,6 +3,8 @@ import { GET_EPISODES } from "@/graphql/queries"
 import { EpisodeProps } from "@/interfaces"
 import EpisodeCard from "@/components/common/EpisodeCard"
 import { useEffect, useState } from "react"
+import ErrorBoundary from "@/components/ErrorBoundary"
+import ErrorProneComponent from "@/components/ErrorProneComponent"
 
 
 
@@ -36,7 +38,7 @@ const Home: React.FC = () => {
       {/* Main Content */}
       <main className="flex-grow p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {results && results.map(({ id, name, air_date, episode }: EpisodeProps, key: number) => (
+          {results ? results.map(({ id, name, air_date, episode }: EpisodeProps, key: number) => (
             <EpisodeCard
               id={id}
               name={name}
@@ -44,17 +46,19 @@ const Home: React.FC = () => {
               episode={episode}
               key={key}
             />
-          ))}
+          )) : <ErrorBoundary>
+            <ErrorProneComponent />
+          </ErrorBoundary>}
         </div>
 
         {/* Pagination Buttons */}
         <div className="flex justify-between mt-6">
-          <button 
+          <button
             onClick={() => setPage(prev => prev > 1 ? prev - 1 : 1)}
             className="bg-[#45B69C] text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-[#3D9B80] transition duration-200 transform hover:scale-105">
             Previous
           </button>
-          <button 
+          <button
             onClick={() => setPage(prev => prev < info.pages ? prev + 1 : prev)}
             className="bg-[#45B69C] text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-[#3D9B80] transition duration-200 transform hover:scale-105">
             Next
